@@ -28,7 +28,8 @@ public class StringSearch {
                         tree.getChildren(),
                         0,
                         false,
-                        "",
+                        null,
+                        0,
                         0,
                         i);
 

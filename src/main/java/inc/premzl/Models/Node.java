@@ -21,6 +21,12 @@ public class Node {
         this.children = new ArrayList<>();
     }
 
+    public Node(String weight, Integer sequenceNumber, List<Node> children) {
+        this.weight = weight;
+        this.sequenceNumber = sequenceNumber;
+        this.children = children;
+    }
+
     public String getWeight() {
         return weight;
     }
@@ -41,9 +47,13 @@ public class Node {
         return children;
     }
 
+    public void setChildren(List<Node> children) {
+        this.children = children;
+    }
+
     public void print(StringBuilder buffer, String prefix, String childrenPrefix) {
         buffer.append(prefix);
-        buffer.append(weight + " " + sequenceNumber);
+        buffer.append(weight).append(" ").append(sequenceNumber);
         buffer.append('\n');
         for (Iterator<Node> it = children.iterator(); it.hasNext(); ) {
             Node next = it.next();
@@ -53,5 +63,13 @@ public class Node {
                 next.print(buffer, childrenPrefix + "└── ", childrenPrefix + "    ");
             }
         }
+    }
+
+    public static List<Node> clone(List<Node> nodes) {
+        List<Node> cloned = new ArrayList<>();
+        for (Node node : nodes) {
+            cloned.add(new Node(node.getWeight(), node.getSequenceNumber(), clone(node.getChildren())));
+        }
+        return cloned;
     }
 }
