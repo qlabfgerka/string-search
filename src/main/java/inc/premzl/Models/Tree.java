@@ -37,14 +37,15 @@ public class Tree {
                                 Node parent,
                                 Integer parentSequence,
                                 int substring,
-                                int currentSequence) {
+                                int currentSequence,
+                                boolean continueCompare) {
         if (counter >= word.length()) return;
 
         List<Node> children = new ArrayList<>();
         int firstCounter = 0;
 
         for (Node node : nodes) {
-            while (Objects.equals(node.getWeight().charAt(firstCounter), word.charAt(counter))) {
+            while (Objects.equals(node.getWeight().charAt(firstCounter), word.charAt(counter)) && continueCompare) {
                 ++counter;
                 ++firstCounter;
                 found = true;
@@ -60,14 +61,15 @@ public class Tree {
                         node,
                         node.getSequenceNumber(),
                         firstCounter,
-                        currentSequence);
+                        currentSequence,
+                        counter == node.getWeight().length());
                 node.setWeight(node.getWeight().substring(0, firstCounter));
                 node.setSequenceNumber(null);
                 return;
             }
         }
 
-        if (found) {
+        if (found && !continueCompare) {
             children = Node.clone(nodes);
             nodes.clear();
         }
@@ -75,7 +77,7 @@ public class Tree {
         Node node = new Node(word.substring(counter), currentSequence);
         nodes.add(node);
 
-        if (found) {
+        if (found && !continueCompare) {
             node = new Node(parent.getWeight().substring(substring), parentSequence);
             node.setChildren(children);
             nodes.add(node);

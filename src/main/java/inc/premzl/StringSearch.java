@@ -17,8 +17,9 @@ public class StringSearch {
 
         if (Objects.equals(args[0], "kwt")) {
             Tree tree = new Tree();
-            for (String keyword : keywords)
-                tree.addWord(keyword, tree.getChildren(), 0);
+            //for (String keyword : keywords)
+            for (int i = 0; i < fileText.length(); i++)
+                tree.addWord(fileText.substring(i), tree.getChildren(), 0);
 
             tree.displayTree();
         } else if (Objects.equals(args[0], "pt")) {
@@ -31,7 +32,8 @@ public class StringSearch {
                         null,
                         0,
                         0,
-                        i);
+                        i,
+                        true);
 
             tree.displayTree();
         } else throw new Exception("Invalid algorithm argument");
