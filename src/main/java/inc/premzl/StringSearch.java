@@ -27,12 +27,10 @@ public class StringSearch {
             for (int i = 0; i < fileText.length(); i++)
                 tree.addWordCollapse(fileText.substring(i),
                         tree.getChildren(),
-                        0,
                         false,
                         null,
-                        0,
-                        0,
                         i,
+                        0,
                         true);
 
             tree.displayTree();

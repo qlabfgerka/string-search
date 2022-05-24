@@ -32,37 +32,32 @@ public class Tree {
 
     public void addWordCollapse(String word,
                                 List<Node> nodes,
-                                int counter,
                                 boolean found,
                                 Node parent,
-                                Integer parentSequence,
-                                int substring,
                                 int currentSequence,
+                                int substring,
                                 boolean continueCompare) {
-        if (counter >= word.length()) return;
+        if (word.length() == 0) return;
 
         List<Node> children = new ArrayList<>();
         int firstCounter = 0;
 
         for (Node node : nodes) {
-            while (Objects.equals(node.getWeight().charAt(firstCounter), word.charAt(counter)) && continueCompare) {
-                ++counter;
+            while (Objects.equals(node.getWeight().charAt(firstCounter), word.charAt(firstCounter)) && continueCompare) {
                 ++firstCounter;
                 found = true;
 
-                if (firstCounter >= node.getWeight().length()) break;
+                if (firstCounter >= node.getWeight().length() || firstCounter >= word.length()) break;
             }
 
             if (found && firstCounter != 0) {
-                addWordCollapse(word,
+                addWordCollapse(word.substring(firstCounter),
                         node.getChildren(),
-                        counter,
                         true,
                         node,
-                        node.getSequenceNumber(),
-                        firstCounter,
                         currentSequence,
-                        counter == node.getWeight().length());
+                        firstCounter,
+                        firstCounter == node.getWeight().length());
                 node.setWeight(node.getWeight().substring(0, firstCounter));
                 node.setSequenceNumber(null);
                 return;
@@ -74,11 +69,11 @@ public class Tree {
             nodes.clear();
         }
 
-        Node node = new Node(word.substring(counter), currentSequence);
+        Node node = new Node(word, currentSequence);
         nodes.add(node);
 
         if (found && !continueCompare) {
-            node = new Node(parent.getWeight().substring(substring), parentSequence);
+            node = new Node(parent.getWeight().substring(substring), parent.getSequenceNumber());
             node.setChildren(children);
             nodes.add(node);
         }
