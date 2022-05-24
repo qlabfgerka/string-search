@@ -44,6 +44,8 @@ public class StringSearch {
             //tree.displayTree();
 
             for (String keyword : keywords) tree.findIndexes(keyword, tree.getChildren(), false, indexes);
+            
+            printIndexes(indexes, keywords, fileText);
         } else if ((Objects.equals(args[0], "testPT")) || (Objects.equals(args[0], "testKWT"))) {
             long avgTime, start, end;
             int iterations = 1000;
