@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Tree {
-    private List<Node> children;
+    private final List<Node> children;
 
     public Tree() {
         this.children = new ArrayList<>();
@@ -30,13 +30,13 @@ public class Tree {
         addWord(word, node.getChildren(), ++counter);
     }
 
-    public void addWordCollapse(String word,
-                                List<Node> nodes,
-                                boolean found,
-                                Node parent,
-                                int currentSequence,
-                                int substring,
-                                boolean continueCompare) {
+    public void addWord(String word,
+                        List<Node> nodes,
+                        boolean found,
+                        Node parent,
+                        int currentSequence,
+                        int substring,
+                        boolean continueCompare) {
         if (word.length() == 0) return;
 
         List<Node> children = new ArrayList<>();
@@ -51,7 +51,7 @@ public class Tree {
             }
 
             if (found && firstCounter != 0) {
-                addWordCollapse(word.substring(firstCounter),
+                addWord(word.substring(firstCounter),
                         node.getChildren(),
                         true,
                         node,
@@ -76,6 +76,50 @@ public class Tree {
             node = new Node(parent.getWeight().substring(substring), parent.getSequenceNumber());
             node.setChildren(children);
             nodes.add(node);
+        }
+    }
+
+    public boolean findIndexes(String haystack, int i, List<Node> nodes, List<Integer> indexes) {
+        if (nodes.size() == 0) return true;
+        if (haystack.length() == 0) return false;
+
+        for (Node node : nodes) {
+            if (Objects.equals(haystack.charAt(0), node.getWeight().charAt(0))) {
+                if (findIndexes(haystack.substring(1), i, node.getChildren(), indexes))
+                    indexes.add(i);
+            }
+        }
+
+        return false;
+    }
+
+    public void findIndexes(String haystack, List<Node> nodes, boolean finished, List<Integer> indexes) {
+        int counter;
+        boolean currentFinished = false;
+        for (Node node : nodes) {
+            boolean found = false;
+            counter = 0;
+            while (!finished && !Objects.equals(haystack, "") && haystack.charAt(counter) == node.getWeight().charAt(counter)) {
+                found = true;
+                counter++;
+
+                if (counter >= haystack.length()) {
+                    finished = true;
+                    currentFinished = true;
+                    break;
+                }
+                if (counter >= node.getWeight().length()) break;
+            }
+
+            if (finished && node.getSequenceNumber() != null) {
+                indexes.add(node.getSequenceNumber());
+            }
+
+            if (found || finished) {
+                findIndexes(haystack.substring(counter), node.getChildren(), finished, indexes);
+            }
+
+            if (currentFinished) return;
         }
     }
 
